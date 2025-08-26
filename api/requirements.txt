@@ -1,0 +1,4 @@
+azure-functions
+requests
+azure-functions
+azure-data-tables

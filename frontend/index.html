@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Portal de Noticias</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; }
+    input { margin: 0.5rem; }
+    button { margin-left: 0.5rem; }
+    li { margin-bottom: 0.5rem; }
+  </style>
+</head>
+<body>
+  <h1>Noticias</h1>
+
+  <!-- Formulario para agregar noticia -->
+  <div>
+    <input id="title" placeholder="Título">
+    <input id="content" placeholder="Contenido">
+    <button onclick="addNews()">Agregar Noticia</button>
+  </div>
+
+  <h2>Lista de noticias</h2>
+  <ul id="newsList"></ul>
+
+  <script>
+    const apiBase = "http://localhost:7071/api";
+
+    // Función para cargar noticias
+    async function loadNews() {
+      try {
+        const res = await fetch(`${apiBase}/GetNews`);
+        const news = await res.json();
+        const list = document.getElementById("newsList");
+        list.innerHTML = "";
+        news.forEach(item => {
+          const li = document.createElement("li");
+          li.textContent = `${item.title}: ${item.content}`;
+          list.appendChild(li);
+        });
+      } catch (err) {
+        console.error("Error cargando noticias:", err);
+      }
+    }
+
+    // Función para agregar noticia
+    async function addNews() {
+      const title = document.getElementById("title").value;
+      const content = document.getElementById("content").value;
+
+      if (!title || !content) {
+        alert("Completa título y contenido");
+        return;
+      }
+
+      try {
+        await fetch(`${apiBase}/AddNews`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title, content })
+        });
+
+        // Limpiar inputs
+        document.getElementById("title").value = "";
+        document.getElementById("content").value = "";
+
+        // Recargar lista de noticias
+        loadNews();
+      } catch (err) {
+        console.error("Error agregando noticia:", err);
+      }
+    }
+
+    // Cargar noticias al iniciar
+    loadNews();
+  </script>
+</body>
+</html>
