@@ -30,8 +30,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     # Entidad a guardar
     entity = {
-        "PartitionKey": "Access",   # Podés agrupar todos con la misma PartitionKey
-        "RowKey": operation_id,     # Debe ser único → usamos el UUID
+        "PartitionKey": "Access", 
+        "RowKey": operation_id,   
         "TimestampUTC": timestamp
     }
 
